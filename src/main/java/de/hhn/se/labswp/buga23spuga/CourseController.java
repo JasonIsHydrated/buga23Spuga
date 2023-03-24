@@ -50,7 +50,7 @@ public class CourseController {
 
 
 
-        return "Saved";
+        return "Ihr Kurs >" + coursename + "< wurde erfolgreich erstellt.";
     }
     @RequestMapping(path="/add/includingOffer", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String addNewOffer (@RequestParam String coursename, @RequestParam String locID, @RequestParam String date,
@@ -88,7 +88,7 @@ public class CourseController {
 
 
 
-        return "Saved";
+        return "Ihr Kurs >" + coursename + "< wurde erfolgreich erstellt. \n Zusätzlich wurde das Angebot am " + date + " erstellt.";
     }
     @GetMapping(path="/all")
     public @ResponseBody Iterable<Course> getAllCourses() { return courseRepository.findAll(); }
