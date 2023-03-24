@@ -81,7 +81,7 @@ public class Course implements Serializable {
 
     @ManyToMany(targetEntity=de.hhn.se.labswp.buga23spuga.Category.class)
     @org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.LOCK})
-    @JoinTable(name="Category_Course", joinColumns={ @JoinColumn(name="CourseName") }, inverseJoinColumns={ @JoinColumn(name="CategoryName") })
+    @JoinTable(name="Category_Course", joinColumns={ @JoinColumn(name="coursename") }, inverseJoinColumns={ @JoinColumn(name="categoryname") })
     @org.hibernate.annotations.LazyCollection(org.hibernate.annotations.LazyCollectionOption.TRUE)
     protected java.util.Set category = new java.util.HashSet();
 
@@ -143,6 +143,12 @@ public class Course implements Serializable {
     public final de.hhn.se.pmt.gruppea.model.ReviewSetCollection rating = new de.hhn.se.pmt.gruppea.model.ReviewSetCollection(this, _ormAdapter, de.hhn.se.pmt.gruppea.model.ORMConstants.KEY_COURSE_RATING, de.hhn.se.pmt.gruppea.model.ORMConstants.KEY_REVIEW_CONTENT, de.hhn.se.pmt.gruppea.model.ORMConstants.KEY_MUL_ONE_TO_MANY);
     */
 
+    public void setCategory(Category value) {
+        if (value != null) {
+            value.content.add(this);
+            this.category.add(value);
+        }
+    }
     public void setOrganizer(Courseorganizer value) {
         if (organizer != null) {
             organizer.course.remove(this);
