@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Array;
 import java.sql.Timestamp;
 
 
@@ -26,22 +27,34 @@ public class CourseController {
     @Autowired
     private LocationRepository locationRepository;
 
-    @RequestMapping(path="/add", method = { RequestMethod.GET, RequestMethod.POST })
-    public @ResponseBody String addNewCourse (@RequestParam String coursename) {
+    @Autowired CategoryRepository categoryRepository;
 
-        // Suche einen CourseOrganizer, erstelle den Course und füge den Organizer zu
+    @RequestMapping(path="/add", method = { RequestMethod.GET, RequestMethod.POST })
+    public @ResponseBody String addNewCourse (@RequestParam String coursename, @RequestParam(value = "catName", required = false)String[] checkedBoxes) {
+
         Courseorganizer o = courseOrganizerRepository.findById(1).orElseThrow(() -> new EntityNotFoundException());
         Course c = new Course();
         c.setName(coursename);
         c.setOrganizer(o);
         courseRepository.save(c);
         courseOrganizerRepository.save(o);
+
+        if(checkedBoxes != null) {
+            for(int i = 0; i < checkedBoxes.length; i++) {
+                Category cat = categoryRepository.findById(checkedBoxes[i]).orElseThrow(()-> new EntityNotFoundException());
+                c.setCategory(cat);
+                courseRepository.save(c);
+                categoryRepository.save(cat);
+            }
+        }
+
+
 
         return "Saved";
     }
     @RequestMapping(path="/add/includingOffer", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String addNewOffer (@RequestParam String coursename, @RequestParam String locID, @RequestParam String date,
-                                             @RequestParam String time) {
+                                             @RequestParam String time, @RequestParam(value = "catName", required = false)String[] checkedBoxes) {
 
         Courseorganizer o = courseOrganizerRepository.findById(1).orElseThrow(() -> new EntityNotFoundException());
         Course c = new Course();
@@ -49,6 +62,15 @@ public class CourseController {
         c.setOrganizer(o);
         courseRepository.save(c);
         courseOrganizerRepository.save(o);
+
+        if(checkedBoxes != null) {
+            for(int i = 0; i < checkedBoxes.length; i++) {
+                Category cat = categoryRepository.findById(checkedBoxes[i]).orElseThrow(()-> new EntityNotFoundException());
+                c.setCategory(cat);
+                courseRepository.save(c);
+                categoryRepository.save(cat);
+            }
+        }
 
         Offer offer = new Offer();
         offer.setContent(c);

@@ -7,6 +7,7 @@
         function select()
         {
             var1=document.getElementById("radio1");
+
             if(var1.checked==true)
             {
                 document.myform.action="http://localhost:8080/course/add/includingOffer";
@@ -58,8 +59,9 @@
                         var category = daten[i];
                         var checkbox = document.createElement("input");
                         checkbox.setAttribute('type', 'checkbox');
-                        checkbox.name = ""+category.name;
-                        checkbox.id = ""+category.name + i;
+                        checkbox.name = "catName";
+                        checkbox.class = "catClass";
+                        checkbox.id = category.name;
                         checkbox.value = category.name;
                         var label = document.createElement("label");
                         label.htmlFor = ""+category.name+i;
@@ -80,7 +82,7 @@
     Kursname: <input name="coursename"><br>
     <br>
     <label for="category-names">Kategorien:</label>
-    <div name="catName" id="category-names"></div>
+    <div id="category-names"></div>
     <br>
     <fieldset>
         <legend>Direkt ein Angebot erstellen::</legend>
