@@ -1,1 +1,20 @@
+# application properties because of local databases
 src/main/resources/application.properties
+
+# IntelliJ specific files
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Gradle build results, gradle cache
+build/
+.gradle/
+
+# Ignore top level log files and directories
+*.log
+logs/
+
+
+
