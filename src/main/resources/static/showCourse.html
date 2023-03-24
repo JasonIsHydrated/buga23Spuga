@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Alle Kurse in einer Liste</title>
+  <script type="text/javascript">
+    var http = null;
+    http = new XMLHttpRequest();
+    if (http != null) {
+      http.open("GET", "http://localhost:8080/course/all", true);
+      http.setRequestHeader("Accept", "application/json");
+      http.onreadystatechange = ausgeben;
+      http.send(null);
+    }
+    function ausgeben() {
+      if (http.readyState == 4) {
+        var daten = http.responseText;
+        daten = eval("(" + daten + ")");
+        var liste = document.getElementById("Liste");
+        for (var i = 0; i < daten.length; i++) {
+          var course = daten[i];
+          var li = document.createElement("li");
+          var txt = document.createTextNode(course.name);
+          li.appendChild(txt);
+          liste.appendChild(li);
+        }
+      }
+    }
+  </script>
+</head>
+<body>
+<h1>Kurse aus Webservice</h1>
+<ul id="Liste"></ul>
+</body>
+</html>
