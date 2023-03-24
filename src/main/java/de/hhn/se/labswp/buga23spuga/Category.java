@@ -51,12 +51,13 @@ public class Category implements Serializable {
     @Column(name="Name", nullable=false, length=255)
     @Id
     private String name;
-
+/*
     @ManyToMany(mappedBy="ORM_category", targetEntity=de.hhn.se.labswp.buga23spuga.Course.class)
     @org.hibernate.annotations.Cascade({org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.LOCK})
     @org.hibernate.annotations.LazyCollection(org.hibernate.annotations.LazyCollectionOption.TRUE)
     protected java.util.Set content = new java.util.HashSet();
 
+ */
     //GETTER UND SETTER
     public void setName(String value) {
         this.name = value;
