@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil erstellen</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    <script type="text/javascript">
+        function select()
+        {
+            var1=document.getElementById("radio1");
+
+            if(var1.checked==true)
+            {
+                document.myform.action="http://localhost:8080/course/add/includingOffer";
+            }
+            else
+            {
+                document.myform.action="http://localhost:8080/course/add";
+            }
+        }
+    for(var i= 0; i < 2; i++) {
+        var http = null;
+        http = new XMLHttpRequest();
+        if (http != null) {
+            http.open("GET", "http://localhost:8080/location/all", true);
+            http.setRequestHeader("Accept", "application/json");
+            http.onreadystatechange = ausgebenLoc;
+            http.send(null);
+        }
+        function ausgebenLoc() {
+            if (http.readyState == 4) {
+                var daten = http.responseText;
+                daten = eval("(" + daten + ")");
+                var menu = document.querySelector("#location-names");
+                menu.style.fontFamily = "Arial";
+                menu.style.color = "#563d16";
+                for (var i = 0; i < daten.length; i++) {
+                    var location = daten[i];
+                    var option = document.createElement("option");
+                    option.text = location.name;
+                    option.value = location.id;
+                    menu.appendChild(option);
+                }
+
+            }
+        }
+        var http2 = null;
+        http2 = new XMLHttpRequest();
+        if(http2 != null) {
+            http2.open("GET", "http://localhost:8080/category/all", true);
+            http2.setRequestHeader("Accept", "application/json");
+            http2.onreadystatechange = ausgebenCat;
+            http2.send(null);
+
+        }
+        function ausgebenCat() {
+            if(http2.readyState == 4) {
+                var daten = http2.responseText;
+                daten = eval("("+daten+")");
+                var menu = document.querySelector("#category-names");
+                menu.style.fontFamily = "Arial";
+                menu.style.color = "#563d16";
+                for(var i = 0; i < daten.length; i++) {
+                    var category = daten[i];
+                    var checkbox = document.createElement("input");
+                    checkbox.setAttribute('type', 'checkbox');
+                    checkbox.name = "catName";
+                    checkbox.class = "catClass";
+                    checkbox.id = category.name;
+                    checkbox.value = category.name;
+                    var label = document.createElement("label");
+                    label.htmlFor = ""+category.name+i;
+                    label.appendChild(document.createTextNode(category.name + "  "));
+                    menu.appendChild(checkbox);
+                    menu.appendChild(label);
+                    linebreak = document.createElement("br");
+                    menu.appendChild(linebreak);
+                }
+            }
+        }
+    }
+    </script>
+    <style>
+        .page-content{
+            padding: 50px 600px;
+            overflow: auto;
+            max-height: 80vh;
+        }
+        .mdl-textfield__label{
+            color: #563d16;
+        }
+
+        .toggle:checked{
+            background-color: brown;
+        }
+    </style>
+
+</head>
+<body>
+<form action="http://localhost:8080/course/add" name="myform" onsubmit="select()">
+    <!-- Always shows a header, even in smaller screens. -->
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+        <header class="mdl-layout__header" style="background-color: #ae8c57;" >
+            <div class="mdl-layout__header-row">
+                <!-- Title -->
+                <span class="mdl-layout-title">SPUGA</span>
+                <!-- Add spacer, to align navigation to the right -->
+                <div class="mdl-layout-spacer"></div>
+                <!-- Navigation. We hide it in small screens. -->
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    <img src="sport_well_being_logo.png" width="80" height="80">
+                </nav>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title"></span>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+                <a class="mdl-navigation__link" href="">Link</a>
+            </nav>
+        </div>
+        <main class="mdl-layout__content">
+            <div class="page-content">
+                <form action="#">
+                    <div>
+                        <h3 style="color: #563d16">Kurs erstellen</h3>
+                    </div>
+                    <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" style="color: #563d16">
+                        <input class="mdl-textfield__input" type="text" id="coursename" name="coursename">
+                        <label class="mdl-textfield__label" for="coursename">Kursname</label>
+                    </div>
+                    <br>
+                    <div>
+                        <span style="color: #563d16;font-size: 16px">Kategorien:</span>
+                    </div>
+                    <div id="category-names"></div>
+                    <div>
+                        <br>
+                        <legend style="color: #563d16;font-size: 16px">Direkt ein Angebot erstellen:</legend>
+                        <div>
+                            <input type="radio" id="radio1" name="offerRadio" value="includeOffer" />
+                            <label for="radio1">Ja</label>
+
+                            <input type="radio" id="radio2" name="offerRadio" value="excludeOffer" />
+                            <label for="radio2">Nein</label>
+
+                        </div>
+                        <br>
+                        <label style="color: #563d16;font-size: 14px" for="location-names">Veranstaltungsort:</label>
+                        <select name="locID" id="location-names"> </select>
+                        <br>
+                        <br>
+                        <label style="color: #563d16;font-size: 14px" for="date">Datum:</label>
+                        <input type="date" id="date" name="date"
+                               value="2023-06-22"
+                               min="2023-01-01" max="2023-12-31">
+                        <br>
+                        <br>
+                        <label style="color: #563d16;font-size: 14px" for="time">Uhrzeit:</label>
+
+                        <input type="time" id="time" name="time"
+                               value="12:00"
+                               min="09:00" max="20:00" required>
+                        <br>
+                        <button formmethod="post" class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" style="background-color: #ae8c57;
+                        border-radius: 15px; margin-top: 40px; margin-left: 80px">
+                            Speichern
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+</form>
+</body>
