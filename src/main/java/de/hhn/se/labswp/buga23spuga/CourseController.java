@@ -32,63 +32,77 @@ public class CourseController {
     @RequestMapping(path="/add", method = { RequestMethod.GET, RequestMethod.POST })
     public @ResponseBody String addNewCourse (@RequestParam String coursename, @RequestParam(value = "catName", required = false)String[] checkedBoxes) {
 
-        Courseorganizer o = courseOrganizerRepository.findById(1).orElseThrow(() -> new EntityNotFoundException());
-        Course c = new Course();
-        c.setName(coursename);
-        c.setOrganizer(o);
-        courseRepository.save(c);
-        courseOrganizerRepository.save(o);
-
-        if(checkedBoxes != null) {
-            for(int i = 0; i < checkedBoxes.length; i++) {
-                Category cat = categoryRepository.findById(checkedBoxes[i]).orElseThrow(()-> new EntityNotFoundException());
-                c.setCategory(cat);
+            try{
+                courseRepository.findById(coursename).orElseThrow(()-> new EntityNotFoundException());
+                return "Ein Kurs mit diesem Namen existiert bereits.";
+            } catch (EntityNotFoundException e){
+                Courseorganizer o = courseOrganizerRepository.findById(1).orElseThrow(() -> new EntityNotFoundException());
+                Course c = new Course();
+                c.setName(coursename);
+                c.setOrganizer(o);
                 courseRepository.save(c);
-                categoryRepository.save(cat);
+                courseOrganizerRepository.save(o);
+
+                if(checkedBoxes != null) {
+                    for(int i = 0; i < checkedBoxes.length; i++) {
+                        Category cat = categoryRepository.findById(checkedBoxes[i]).orElseThrow(()-> new EntityNotFoundException());
+                        c.setCategory(cat);
+                        courseRepository.save(c);
+                        categoryRepository.save(cat);
+                    }
+                }
+
+
+
+                return "Ihr Kurs >" + coursename + "< wurde erfolgreich erstellt.";
             }
-        }
 
 
 
-        return "Ihr Kurs >" + coursename + "< wurde erfolgreich erstellt.";
     }
     @RequestMapping(path="/add/includingOffer", method = {RequestMethod.GET, RequestMethod.POST})
     public @ResponseBody String addNewOffer (@RequestParam String coursename, @RequestParam String locID, @RequestParam String date,
                                              @RequestParam String time, @RequestParam(value = "catName", required = false)String[] checkedBoxes) {
 
-        Courseorganizer o = courseOrganizerRepository.findById(1).orElseThrow(() -> new EntityNotFoundException());
-        Course c = new Course();
-        c.setName(coursename);
-        c.setOrganizer(o);
-        courseRepository.save(c);
-        courseOrganizerRepository.save(o);
+        try{
+            courseRepository.findById(coursename).orElseThrow(()-> new EntityNotFoundException());
+            return "Ein Kurs mit diesem Namen existiert bereits.";
+        } catch (EntityNotFoundException e){
+            Courseorganizer o = courseOrganizerRepository.findById(1).orElseThrow(() -> new EntityNotFoundException());
+            Course c = new Course();
+            c.setName(coursename);
+            c.setOrganizer(o);
+            courseRepository.save(c);
+            courseOrganizerRepository.save(o);
 
-        if(checkedBoxes != null) {
-            for(int i = 0; i < checkedBoxes.length; i++) {
-                Category cat = categoryRepository.findById(checkedBoxes[i]).orElseThrow(()-> new EntityNotFoundException());
-                c.setCategory(cat);
-                courseRepository.save(c);
-                categoryRepository.save(cat);
+            if(checkedBoxes != null) {
+                for(int i = 0; i < checkedBoxes.length; i++) {
+                    Category cat = categoryRepository.findById(checkedBoxes[i]).orElseThrow(()-> new EntityNotFoundException());
+                    c.setCategory(cat);
+                    courseRepository.save(c);
+                    categoryRepository.save(cat);
+                }
             }
+
+            Offer offer = new Offer();
+            offer.setContent(c);
+            offer.setResponsible(o);
+            String dateTime = date.toString() + " " + time.toString() + ":00";
+            Timestamp start = Timestamp.valueOf(dateTime);
+            offer.setStart(start);
+            Integer locationID = Integer.valueOf(locID);
+            Location location = locationRepository.findById(locationID).orElseThrow(() -> new EntityNotFoundException());
+            offer.setLocation(location);
+            offerRepository.save(offer);
+            courseRepository.save(c);
+            courseOrganizerRepository.save(o);
+            locationRepository.save(location);
+
+
+
+            return "Ihr Kurs >" + coursename + "< wurde erfolgreich erstellt. \n Zusätzlich wurde das Angebot am " + date + " erstellt.";
         }
 
-        Offer offer = new Offer();
-        offer.setContent(c);
-        offer.setResponsible(o);
-        String dateTime = date.toString() + " " + time.toString() + ":00";
-        Timestamp start = Timestamp.valueOf(dateTime);
-        offer.setStart(start);
-        Integer locationID = Integer.valueOf(locID);
-        Location location = locationRepository.findById(locationID).orElseThrow(() -> new EntityNotFoundException());
-        offer.setLocation(location);
-        offerRepository.save(offer);
-        courseRepository.save(c);
-        courseOrganizerRepository.save(o);
-        locationRepository.save(location);
-
-
-
-        return "Ihr Kurs >" + coursename + "< wurde erfolgreich erstellt. \n Zusätzlich wurde das Angebot am " + date + " erstellt.";
     }
     @GetMapping(path="/all")
     public @ResponseBody Iterable<Course> getAllCourses() { return courseRepository.findAll(); }
