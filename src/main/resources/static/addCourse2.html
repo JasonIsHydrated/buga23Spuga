@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Profil erstellen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kurs erstellen</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
     <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
@@ -83,8 +84,9 @@
     }
     </script>
     <style>
+
         .page-content{
-            padding: 50px 600px;
+            text-align: center;
             overflow: auto;
             max-height: 80vh;
         }
@@ -94,6 +96,22 @@
 
         .toggle:checked{
             background-color: brown;
+        }
+        .left, .right {
+            float: left;
+            width: 20%; /* The width is 20%, by default */
+        }
+
+        .main {
+            float: left;
+            width: 60%; /* The width is 60%, by default */
+        }
+
+        /* Use a media query to add a breakpoint at 800px: */
+        @media screen and (max-width: 800px) {
+            .left, .main, .right {
+                width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
+            }
         }
     </style>
 
